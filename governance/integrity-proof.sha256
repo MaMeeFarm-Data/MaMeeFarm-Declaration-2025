@@ -1,0 +1,22 @@
+# MaMeeFarm™ Integrity Proof Register (SHA-256)
+# Append-only — do not edit past entries.
+
+## Block: 2025-11-11T00:00:00Z
+signer: MaMeeFarm™ Governance Council
+location: Lampang, Thailand
+notes: Initial declaration repository bootstrap.
+
+file: registry/collection-proof/proof-7-ducks-of-hope.md
+sha256: <pending>
+commit: <pending>
+verified_at: <pending>
+
+file: registry/collection-proof/proof-seed-of-hope.md
+sha256: <pending>
+commit: <pending>
+verified_at: <pending>
+
+file: valuation/MMFARM-IP-Statement-2025.md
+sha256: <pending>
+commit: <pending>
+verified_at: <pending>
