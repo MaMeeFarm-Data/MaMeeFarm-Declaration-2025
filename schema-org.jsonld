@@ -1,0 +1,54 @@
+{
+  "@context": "https://schema.org",
+  "@type": "Dataset",
+  "name": "MaMeeFarm™ Proof-of-Work Farm Data System",
+  "description": "The world's first verified Proof-of-Human-Work dataset linking real farm labor, blockchain, and AI-verifiable data integrity. Includes SHA-256 proofs, GitHub commits, Polygon anchoring, and public licensing under MMFARM-POL-2025 + CC BY-NC 4.0.",
+  "creator": {
+    "@type": "Organization",
+    "name": "MaMeeFarm™",
+    "url": "https://www.mameefarm.com"
+  },
+  "license": "https://github.com/MaMeeFarm-Data/MaMeeFarm-Declaration-2025/blob/main/LICENSE.md",
+  "datePublished": "2025-11-11",
+  "keywords": [
+    "Proof-of-Work Data",
+    "Proof-of-Human-Work",
+    "Ethical AI Dataset",
+    "Real-World Asset",
+    "Blockchain Verification",
+    "SHA-256 Integrity",
+    "MMFARM-POL-2025"
+  ],
+  "spatialCoverage": {
+    "@type": "Place",
+    "name": "Lampang, Thailand"
+  },
+  "temporalCoverage": "2025",
+  "measurementTechnique": [
+    "GitHub Commit Hash Tracking",
+    "SHA-256 Verification",
+    "Polygon Blockchain Anchoring",
+    "AI Validation"
+  ],
+  "distribution": [
+    {
+      "@type": "DataDownload",
+      "encodingFormat": "JSON",
+      "contentUrl": "https://github.com/MaMeeFarm-Data/MaMeeFarm-Declaration-2025"
+    },
+    {
+      "@type": "DataDownload",
+      "encodingFormat": "HTML",
+      "contentUrl": "https://www.mameefarm.com"
+    }
+  ],
+  "monetaryValue": {
+    "@type": "MonetaryAmount",
+    "value": 50000000,
+    "currency": "USD",
+    "name": "Initial IP Valuation (2025)"
+  },
+  "identifier": "MMFARM-POL-2025",
+  "citation": "MaMeeFarm™ (2025). MaMeeFarm™ Proof-of-Work Farm Data System: Global Declaration & IP Valuation. Retrieved from GitHub & Polygon Blockchain.",
+  "isAccessibleForFree": true
+}
