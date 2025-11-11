@@ -1,0 +1,7 @@
+# MaMeeFarm™ Official Checksum Registry
+# Format: <SHA256><two spaces><relative path>
+
+3f7ad4f4ab7c3de843f2e3b64a0dfc51347a9a8d5870b58c4ed8a88ef4ff120d  README.md
+a5c29e4b6872d66cf3e6a2b6a048a4cfcc8d88b252c5cde7c417de47df9a89ac  valuation/MMFARM-IP-Statement-2025.md
+c26a77e98724a6c92e23f62a7ddba8cfb3f8b6fd88b03b59d0a2cc0b9b34e212  tools/checksum-guide.md
+b27b42d02e62b613e6b32d6a52a208b6f7fceab748789abb3d09745e09ffb9a9  license/LICENSE.md
