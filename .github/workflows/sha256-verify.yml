@@ -1,0 +1,99 @@
+# FILE: .github/workflows/sha256-verify.yml
+name: MaMeeFarm SHA-256 Verification
+on:
+  push:
+  pull_request:
+
+jobs:
+  verify-sha256:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Build target file list (MaMeeFarm proof scope)
+        run: |
+          set -e
+          # --- declare patterns to verify ---
+          cat > patterns.txt <<'PATTERNS'
+          valuation/*.md
+          registry/collection-proof/*.md
+          tools/checksum-guide.md
+          README.md
+          license/*.md
+          PATTERNS
+          # --- expand patterns to concrete files (ignore missing) ---
+          > files.list
+          while read -r p; do
+            ls -1 $p 2>/dev/null || true
+          done < patterns.txt >> files.list
+          sort -u files.list > files.tracked
+          echo "Tracked files:"
+          cat files.tracked || true
+
+      - name: Compute SHA-256 for tracked files
+        run: |
+          if [ ! -s files.tracked ]; then
+            echo "::warning::No files matched verification patterns."
+            exit 0
+          fi
+          # sha256sum is available by default on Ubuntu runners
+          sha256sum $(cat files.tracked) > sha256_current.txt
+          echo "Current checksums:"
+          head -n 50 sha256_current.txt || true
+
+      - name: Compare against registry (governance/checksums.sha256)
+        run: |
+          if [ ! -f governance/checksums.sha256 ]; then
+            echo "::warning::Missing governance/checksums.sha256 registry. Add it to enable strict verification."
+            exit 0
+          fi
+          # normalize whitespace for robust diff
+          awk '{$1=$1}1' governance/checksums.sha256 > registry.norm
+          awk '{$1=$1}1' sha256_current.txt > current.norm
+          diff -u registry.norm current.norm > sha256_diff.txt || true
+          if [ -s sha256_diff.txt ]; then
+            echo "::error::SHA-256 mismatch detected. Update registry or fix files."
+            cat sha256_diff.txt
+            exit 1
+          else
+            echo "✅ Checksums match registry."
+          fi
+
+      - name: Upload verification artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: sha256-report
+          path: |
+            files.tracked
+            sha256_current.txt
+            governance/checksums.sha256
+            sha256_diff.txt
+
+      - name: Job summary
+        run: |
+          {
+            echo "## MaMeeFarm™ SHA-256 Verification Report"
+            echo ""
+            echo "- UTC: $(date -u '+%Y-%m-%d %H:%M:%S')"
+            echo "- Tracked files: $(wc -l < files.tracked 2>/dev/null || echo 0)"
+            if [ -s sha256_diff.txt ]; then
+              echo ""
+              echo "❌ **Mismatch detected** — see artifact \`sha256-report\` for details."
+            else
+              echo ""
+              echo "✅ **All tracked files verified against registry.**"
+            fi
+          } >> "$GITHUB_STEP_SUMMARY"
+
+# --------------------------------------------------------------------
+# FILE: governance/checksums.sha256  (registry used by the workflow)
+# Format = standard sha256sum output: "<hash><two spaces><relative path>"
+# Update this file whenever authoritative content changes:
+#   $ sha256sum $(cat files.tracked) > governance/checksums.sha256
+#
+# --- EXAMPLES (replace with real values from your repo) ---
+9a47b49d2e5f79b4d3f431b02bb93ce8a6c54b16b3a07c8738b172932937f2a8  registry/collection-proof/proof-7-ducks-of-hope.md
+3b1a98d5c1b4e6d44e32efb94d8b5a32e25f67f09df29a3b8e13e6239a10a6c9  valuation/MMFARM-IP-Statement-2025.md
+# (Add lines for each tracked file; keep two spaces between hash and path)
+# --------------------------------------------------------------------
