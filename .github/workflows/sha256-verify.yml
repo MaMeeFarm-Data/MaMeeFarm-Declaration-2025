@@ -1,42 +1,20 @@
-# MaMeeFarm™ — Global SHA-256 Verification (from zero)
-
----
-
-## 0) Verify Commit — คำสั่งตรวจสอบ commit (ดูหลักฐานบน Git)
-ใช้ในเครื่อง (หรือ Codespaces / Git Bash)
-
-### ดูรายการ commit ล่าสุด
-git log --decorate --oneline --graph -n 10
-
-### ดูรายละเอียดไฟล์ที่แก้ใน commit ใด ๆ
-git show <COMMIT_ID>
-
-### ดู history ของไฟล์หนึ่งไฟล์
-git log --follow -- <path/to/file>
-git show <COMMIT_ID>:<path/to/file>
-
----
-
-## 1) Workflow File — รันตรวจ SHA-256 อัตโนมัติทุก commit/PR
-**PATH:** `.github/workflows/sha256-verify.yml`
-
-```yaml
 name: MaMeeFarm SHA-256 Verification
 on:
   push:
   pull_request:
+  workflow_dispatch:
 
 jobs:
   verify-sha256:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     steps:
-      - name: Checkout repo
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
       - name: Build tracked file list
         shell: bash
         run: |
-          set -o pipefail
           cat > patterns.txt <<'PAT'
           valuation/*.md
           registry/collection-proof/*.md
@@ -44,12 +22,10 @@ jobs:
           README.md
           license/*.md
           PAT
-
           > files.tracked
           while read -r p; do
             ls -1 $p 2>/dev/null || true
           done < patterns.txt >> files.tracked
-
           sort -u files.tracked -o files.tracked
           echo "Tracked files:"; cat files.tracked || true
 
@@ -58,9 +34,11 @@ jobs:
         run: |
           if [ ! -s files.tracked ]; then
             echo "::warning::No files matched verification patterns."
-            exit 0
+            echo "no files" > sha256_current.txt
+          else
+            xargs -a files.tracked -d $'\n' sha256sum > sha256_current.txt
           fi
-          xargs -a files.tracked -d '\n' sha256sum > sha256_current.txt
+          echo "=== Current checksums (first 50) ==="
           head -n 50 sha256_current.txt || true
 
       - name: Compare with registry (governance/checksums.sha256)
@@ -68,29 +46,25 @@ jobs:
         run: |
           if [ ! -f governance/checksums.sha256 ]; then
             echo "::notice::Missing governance/checksums.sha256. Use current output to create it."
+            echo "MISSING_REGISTRY=1" >> $GITHUB_ENV
             exit 0
           fi
-
-          # normalize: remove CRLF, comments, extra spaces
           sed 's/\r$//' governance/checksums.sha256 \
             | grep -E '^[a-f0-9]{64}[[:space:]]{2}.+' \
             | awk '{$1=$1}1' > registry.norm || true
-
           sed 's/\r$//' sha256_current.txt \
             | awk '{$1=$1}1' > current.norm
-
           diff -u registry.norm current.norm > sha256_diff.txt || true
-
           if [ -s sha256_diff.txt ]; then
             echo "::error::SHA-256 mismatch detected. Update governance/checksums.sha256."
             cat sha256_diff.txt
+            echo "HAS_DIFF=1" >> $GITHUB_ENV
             exit 1
           else
             echo "✅ Checksums match registry."
           fi
 
-      - name: Upload artifacts
-        uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v4
         with:
           name: sha256-report
           path: |
@@ -102,15 +76,18 @@ jobs:
             sha256_diff.txt
 
       - name: Job summary
+        if: always()
         shell: bash
         run: |
           {
             echo "## MaMeeFarm™ SHA-256 Verification"
             echo "- UTC: $(date -u '+%Y-%m-%d %H:%M:%S')"
             echo "- Tracked files: $(wc -l < files.tracked 2>/dev/null || echo 0)"
-            if [ -s sha256_diff.txt ]; then
-              echo "❌ **Mismatch detected** — see artifact *sha256-report*."
+            if [ "${MISSING_REGISTRY:-}" = "1" ]; then
+              echo "ℹ️ Missing \`governance/checksums.sha256\`. Create from artifact *sha256_current.txt*."
+            elif [ "${HAS_DIFF:-}" = "1" ]; then
+              echo "❌ Mismatch detected — see artifact *sha256-report*."
             else
-              echo "✅ **All tracked files match the registry.**"
+              echo "✅ All tracked files match the registry."
             fi
           } >> "$GITHUB_STEP_SUMMARY"
