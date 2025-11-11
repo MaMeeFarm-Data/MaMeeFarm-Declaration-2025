@@ -1,0 +1,25 @@
+{
+  "registry": "MaMeeFarm™ Collection Proof Index",
+  "version": "2025.11",
+  "collections": [
+    {
+      "name": "7 Ducks of Hope",
+      "type": "Genesis",
+      "url": "https://opensea.io/collection/mameefarm-7-ducks-of-hope",
+      "contract": "0xE2215335aa50b87d1C9DF9b3af4fCf6C4217F07e",
+      "proof_file": "proof-7-ducks-of-hope.md",
+      "sha256": "<pending>"
+    },
+    {
+      "name": "Seed of Hope",
+      "type": "Living",
+      "url": "https://opensea.io/collection/seed-of-hope-mameefarm",
+      "contract": "0xE2215335aa50b87d1C9DF9b3af4fCf6C4217F07e",
+      "proof_file": "proof-seed-of-hope.md",
+      "sha256": "<pending>"
+    }
+  ],
+  "signed_by": "MaMeeFarm™ Governance Council",
+  "location": "Lampang, Thailand",
+  "date": "2025-11-11"
+}
