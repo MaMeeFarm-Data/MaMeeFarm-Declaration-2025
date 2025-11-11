@@ -1,0 +1,19 @@
+------------------------------------------------------------
+MaMeeFarm™ Governance Council — Verification Record
+------------------------------------------------------------
+Document: MaMeeFarm-Declaration-2025
+Reference: MMFARM-IP-2025-V01
+Location: Lampang, Thailand
+Date: 2025-11-11
+
+Verified by:
+  - MaMee (Founder)
+  - P’Toh (System Architect)
+  - Governance Council Seal
+
+All related proofs (SHA-256, Blockchain TX, GitHub Commit)
+are recorded in MaMeeFarm™ repositories and Polygon blockchain.
+
+Contact: governance@mameefarm.com  (Placeholder – pending official setup)
+Website: https://www.mameefarm.com
+------------------------------------------------------------
