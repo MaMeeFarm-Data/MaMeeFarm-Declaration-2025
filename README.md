@@ -42,8 +42,44 @@ license/                    # MMFARM-POL-2025 and overlays
 governance/                 # signatures & integrity proofs
 registry/collection-proof/  # collection-level proofs & index
 tools/                      # hashing & verification helper scripts
+
+---
+![License: MMFARM-POL-2025](https://img.shields.io/badge/license-MMFARM--POL--2025-green.svg)
+![Verification Status](https://img.shields.io/badge/verification-passed-brightgreen.svg)
+![Blockchain Verified](https://img.shields.io/badge/blockchain-Polygon-purple.svg)
+![Data Proof](https://img.shields.io/badge/proof-of--work--data-blue.svg)
+
 ---
 
-© 2025 MaMeeFarm™ — Licensed under **MMFARM-POL-2025** with **CC BY-NC 4.0** overlay.
+🔗 [OpenSea Collection – 7 Ducks of Hope](https://opensea.io/collection/mameefarm-7-ducks-of-hope)  
+🌱 [Seed of Hope Collection](https://opensea.io/collection/seed-of-hope-mameefarm)  
+🧾 [License – MMFARM-POL-2025](./LICENSE.md)  
+⚖️ [Creative Commons CC BY-NC 4.0](https://creativecommons.org/licenses/by-nc/4.0/)  
+⛓️ [Polygon Contract](https://polygonscan.com/address/0xE2215335aa50b87d1C9DF9b3af4fCf6C4217F07e)  
+📂 [GitHub Proof Registry](https://github.com/MaMeeFarm-Data/MaMeeFarm-Declaration-2025)  
+🌐 [Official Site – MaMeeFarm™](https://www.mameefarm.com)
+---
+
+---
+
+## 🌾 Proof-of-Life Footer  
+
+This repository is part of the **MaMeeFarm™ Proof-of-Work Farm Data System**,  
+recorded daily from real agricultural labor in Lampang, Thailand.  
+All data, media, and proofs contained here are generated through verified human effort  
+and maintained by the MaMeeFarm™ Governance Council for global transparency.  
+
+> “From real hands to verified data — every day, every duck, every seed.”
+
+📍 **Location:** MaMeeFarm™, Mueang Pan District, Lampang, Thailand  
+🕓 **Operational Cycle:** Ongoing since April 29 2025 (Day 001 on-chain)  
+🔗 **Verification Layers:** GitHub Commits → SHA-256 Checksums → Polygon Blockchain → MMFARM-POL-2025 License  
+
+© 2025 MaMeeFarm™ — Living Proof of Human Work  
+Licensed under **MMFARM-POL-2025 + CC BY-NC 4.0 Overlay**
+
+---
+
+
 
 
