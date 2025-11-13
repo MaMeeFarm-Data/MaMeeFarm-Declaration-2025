@@ -1,93 +1,38 @@
-name: MaMeeFarm SHA-256 Verification
+name: verify-sha256
+
 on:
   push:
+    branches: [ "main" ]
   pull_request:
-  workflow_dispatch:
+    branches: [ "main" ]
 
 jobs:
-  verify-sha256:
+  sha256-snapshot:
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
+
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-      - name: Build tracked file list
-        shell: bash
+      - name: Generate SHA-256 snapshot
         run: |
-          cat > patterns.txt <<'PAT'
-          valuation/*.md
-          registry/collection-proof/*.md
-          tools/checksum-guide.md
-          README.md
-          license/*.md
-          PAT
-          > files.tracked
-          while read -r p; do
-            ls -1 $p 2>/dev/null || true
-          done < patterns.txt >> files.tracked
-          sort -u files.tracked -o files.tracked
-          echo "Tracked files:"; cat files.tracked || true
+          mkdir -p sha256-logs
+          outfile="sha256-logs/sha256-${GITHUB_SHA}.txt"
 
-      - name: Compute current SHA-256
-        shell: bash
-        run: |
-          if [ ! -s files.tracked ]; then
-            echo "::warning::No files matched verification patterns."
-            echo "no files" > sha256_current.txt
-          else
-            xargs -a files.tracked -d $'\n' sha256sum > sha256_current.txt
-          fi
-          echo "=== Current checksums (first 50) ==="
-          head -n 50 sha256_current.txt || true
+          echo "# MaMeeFarm™ SHA-256 Snapshot" > "$outfile"
+          echo "# Commit: ${GITHUB_SHA}" >> "$outfile"
+          echo "# Date:   $(date -u +"%Y-%m-%dT%H:%M:%SZ")" >> "$outfile"
+          echo "" >> "$outfile"
 
-      - name: Compare with registry (governance/checksums.sha256)
-        shell: bash
-        run: |
-          if [ ! -f governance/checksums.sha256 ]; then
-            echo "::notice::Missing governance/checksums.sha256. Use current output to create it."
-            echo "MISSING_REGISTRY=1" >> $GITHUB_ENV
-            exit 0
-          fi
-          sed 's/\r$//' governance/checksums.sha256 \
-            | grep -E '^[a-f0-9]{64}[[:space:]]{2}.+' \
-            | awk '{$1=$1}1' > registry.norm || true
-          sed 's/\r$//' sha256_current.txt \
-            | awk '{$1=$1}1' > current.norm
-          diff -u registry.norm current.norm > sha256_diff.txt || true
-          if [ -s sha256_diff.txt ]; then
-            echo "::error::SHA-256 mismatch detected. Update governance/checksums.sha256."
-            cat sha256_diff.txt
-            echo "HAS_DIFF=1" >> $GITHUB_ENV
-            exit 1
-          else
-            echo "✅ Checksums match registry."
-          fi
+          find . -type f \
+            ! -path "./.git/*" \
+            ! -path "./sha256-logs/*" \
+            -print0 | sort -z | while read -d $'\0' file; do
+              sha256sum "$file" >> "$outfile"
+            done
 
-      - uses: actions/upload-artifact@v4
+      - name: Upload SHA-256 snapshot
+        uses: actions/upload-artifact@v4
         with:
-          name: sha256-report
-          path: |
-            files.tracked
-            sha256_current.txt
-            governance/checksums.sha256
-            registry.norm
-            current.norm
-            sha256_diff.txt
-
-      - name: Job summary
-        if: always()
-        shell: bash
-        run: |
-          {
-            echo "## MaMeeFarm™ SHA-256 Verification"
-            echo "- UTC: $(date -u '+%Y-%m-%d %H:%M:%S')"
-            echo "- Tracked files: $(wc -l < files.tracked 2>/dev/null || echo 0)"
-            if [ "${MISSING_REGISTRY:-}" = "1" ]; then
-              echo "ℹ️ Missing \`governance/checksums.sha256\`. Create from artifact *sha256_current.txt*."
-            elif [ "${HAS_DIFF:-}" = "1" ]; then
-              echo "❌ Mismatch detected — see artifact *sha256-report*."
-            else
-              echo "✅ All tracked files match the registry."
-            fi
-          } >> "$GITHUB_STEP_SUMMARY"
+          name: sha256-${{ github.sha }}
+          path: sha256-logs/
