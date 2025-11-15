@@ -83,3 +83,30 @@ Total Valuation =
 (20% * AI Dataset Value) +
 (15% * Replication Cost Avoidance)
 
+
+---
+
+## 4. Resulting Valuation Range
+
+- **Conservative:** $18M USD  
+- **Standard (recommended):** $50M USD  
+- **Aggressive (AI-integrated):** $120M–$300M USD  
+
+---
+
+## 5. Why $50M is Used as the Public Declaration
+It is:
+
+- High enough to reflect real scarcity and innovation  
+- Low enough for governments and institutions to take seriously  
+- Reasonable for early-stage infrastructure protocols  
+- Supported by AI dataset demand and IP protection  
+
+---
+
+## 6. Compliance Note
+This methodology aligns with:
+- ISO 10668 (Brand Valuation)  
+- WIPO IP Valuation principles  
+- AI-era dataset pricing standards  
+- Web3 asset valuation frameworks  
